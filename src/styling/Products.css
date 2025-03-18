@@ -1,0 +1,92 @@
+.products-header {
+    justify-content: space-between;
+    display: flex;
+    padding: 0 2rem;
+}
+
+.Addproducts {
+    text-decoration: underline;
+}
+
+.products-box {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem;
+}
+
+.product-box {
+    border: 1px solid #a1a1a1;
+    padding: .3rem;
+    width: 45%;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.product-box h4 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.product-box p {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.product-box i {
+    color: #fcbb27; /* Example: Change icon color */
+}
+
+.dataTables_length {
+    float: left;
+  }
+  
+  .dataTables_filter {
+    float: right;
+  }
+  
+
+
+  .dataTables_Buttons{
+    float: left;
+
+  }
+  
+  .dataTables_pagination{
+    float: right;
+
+  }
+
+  .modal .modal-header{
+    background-color: #502d77;
+  }
+
+ .modal .modal-title {
+    display: flex;
+    margin-left: 9.8rem;
+    color: #fff; /* White text */
+    font-weight: bold;
+ }
+ 
+  .modal .modal-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+
+   .modal .modal-footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-body p {
+    margin-bottom: 4px; /* Reduce space below the paragraph */
+  }
+  
+  .modal-body input {
+    margin-top: 2px; /* Reduce space above the input */
+    margin-bottom: 5px;
+    padding: 6px; /* Adjust padding for better appearance */
+  }
+  

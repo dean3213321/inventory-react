@@ -1,38 +1,123 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif; /* Add a default font for better readability */
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  .navbar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    align-items: center;
+    height: 4.5rem;
+    background-color: #502d77;
+    padding: 0 .8rem;
+    z-index: 1000; /* Ensures navbar stays above other elements */
   }
-  to {
-    transform: rotate(360deg);
+  
+  
+  .wislogo {
+    height: 3.5rem;
+    margin-left: 4rem; /* Add spacing between logo and burger icon */
   }
-}
+  
+  .burgericon {
+    font-size: 2.5rem;
+    margin-left: 3rem;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    transition: color 0.3s ease; /* Smooth color transition */
+  }
+  
+  .burgericon:hover {
+    color: rgb(238, 241, 241);
+  }
+  
+  .user-info {
+    font-size: 2.5rem;
+    color: white;
+    margin-left: auto; /* Push user info to the far right */
+    padding-right: 2rem;
+  }
+  
+  .sidebar {
+    padding-top: 3.8rem;
+    width: 4.1rem; /* Initial width */
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    background-color: #502d77;
+    transition: width 0.3s ease; /* Smooth transition for width change */
+    overflow: hidden; /* Hide overflow content */
+  }
+  
+  .sidebar:hover {
+    width: 10.8rem; /* Expanded width on hover */
+  }
+  
+  .sidebar.expanded {
+    width: 10.7rem; /* Expanded width */
+  }
+  
+  .sidebar ul {
+    font-size: 1.31rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar li {
+    padding: 2.5rem 1rem; /* Adjust padding for better spacing */
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* Prevent text from wrapping */
+  }
+  
+  .sidebar i {
+    font-size: 1.5rem;
+    color: rgb(0, 0, 0);
+    margin-right: .5rem; /* Space between icon and text */
+  }
+  
+  .sidebar-text {
+    opacity: 0; /* Hide text by default */
+    transition: opacity 0.3s ease; /* Smooth transition for text visibility */
+  }
+  
+  .sidebar:hover .sidebar-text {
+    opacity: 1; /* Show text on hover */
+  }
+  
+  .sidebar.expanded .sidebar-text {
+    opacity: 1; /* Show text when expanded */
+  }
+  
+  .sidebar a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+  }
+  
+  .sidebar a:hover {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    margin-left: 4.1rem; /* Default when sidebar is collapsed */
+    transition: margin-left 0.3s ease;
+    padding: 20px;
+  }
+  
+  .sidebar.expanded + .main-content {
+    margin-left: 10rem; /* Adjust when sidebar expands */
+  }
+  
+  .sidebar:hover + .main-content {
+    margin-left: 10rem; /* Adjust when sidebar expands */
+  }
