@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 // Import the DataTable and the required DataTable components
-import { DataTable, DT } from "../utils/datatables-imports.js";
+import { DataTable, DT } from "./utils/datatables-imports.js";
 
 // Import the users CSS file
-import "../styling/Users.css";
+import "./styling/Users.css";
 
 DataTable.use(DT);
 

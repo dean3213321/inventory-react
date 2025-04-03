@@ -8,7 +8,7 @@ const menuItems = [
   { icon: 'bi-people-fill', text: 'Users', path: '/users' },
   { icon: 'bi-box-seam', text: 'Products', path: '/products' },
   { icon: 'bi-coin', text: 'Sales', path: '/sales' },
-  { icon: 'bi-bar-chart-line', text: 'Borrowers', path: '/borrowers' },
+  { icon: 'bi bi-person-vcard', text: 'Supplier', path: '/supplier' },
 ];
 
 const Sidebar = ({ isExpanded }) => {

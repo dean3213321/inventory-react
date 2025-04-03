@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { Alert } from "react-bootstrap";
-import "../styling/Products.css";
+import "./styling/Products.css";
 
 // Import DataTable and DT from the utils folder
-import { DataTable, DT } from "../utils/datatables-imports.js";
+import { DataTable, DT } from "./utils/datatables-imports.js";
 
 // Bootstrap CSS and icons imported for styling
-import { Button, Modal } from '../utils/bootstrap-imports.js';
+import { Button, Modal } from './utils/bootstrap-imports.js';
 
 
 DataTable.use(DT);

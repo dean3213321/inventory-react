@@ -17,9 +17,7 @@ const ReceiptModal = ({ show, onHide, customerData, cart }) => {
       
       const rfid = customerData?.rfid; // Assuming RFID is part of customerData
 
-      const endpoint = rfid ? `${URL}/api/Dashboard/salesId` : `${URL}/api/Dashboard/salesNoId`;
-
-      const response = await fetch(endpoint, {
+      const response = await fetch(`${URL}/api/Dashboard/sales`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

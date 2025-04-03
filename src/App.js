@@ -3,10 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Im
 import './App.css';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import Dashboard from './components/Dashboard';
-import Users from './components/Users';
-import Products from './components/Products';
-import Sales from './components/Sales';
+import Dashboard from './Dashboard';
+import Users from './Users';
+import Products from './Products';
+import Sales from './Sales';
+import Supplier from './Supplier';
 
 function App() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -28,6 +29,8 @@ function App() {
             <Route  exact path="/Users" element={<Users />} />
             <Route  exact path="/Products" element={<Products />} />
             <Route  exact path="/Sales" element={<Sales />} />
+            <Route  exact path="/Supplier" element={<Supplier />} />
+
 
           </Routes>
         </div>

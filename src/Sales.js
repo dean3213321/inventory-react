@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DataTable, DT } from "../utils/datatables-imports.js";
+import { DataTable, DT } from "./utils/datatables-imports.js";
 
 DataTable.use(DT);
 

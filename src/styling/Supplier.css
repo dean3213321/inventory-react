@@ -1,0 +1,29 @@
+.supplier-header {
+    justify-content: space-between;
+    display: flex;
+    padding: .8rem;
+    font-size: 1.3rem;
+}
+
+
+/* Add to your Supplier.css */
+.star-rating {
+    display: flex;
+    gap: 5px;
+}
+
+.star-label {
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.add-supplier-text {
+    color: #000000 !important;
+    text-decoration: underline !important;
+    font-weight: 550;
+}
+
+.add-supplier-text:hover {
+    font-weight: 650;
+}
