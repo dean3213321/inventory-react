@@ -25,21 +25,21 @@ const Dashboard = () => {
         console.error("Error fetching top sold items:", error);
       }
     };
-
+  
     // Fetch revenue data
     const fetchRevenueData = async () => {
       try {
-        const response = await fetch(`${URL}/api/Dashboard/revenue?period=week`); // Fetch weekly revenue data
+        const response = await fetch(`${URL}/api/Dashboard/revenue?period=week`);
         const data = await response.json();
         setRevenueData(data);
       } catch (error) {
         console.error("Error fetching revenue data:", error);
       }
     };
-
+  
     fetchTopSoldItems();
     fetchRevenueData();
-  }, []);
+  }, [URL]);  // Add URL to the dependency array
 
   const handleIconClick = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);

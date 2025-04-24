@@ -12,7 +12,8 @@ const DashboardItemModal = ({ show, onHide, customerData }) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [cart, setCart] = useState([]);
     const [showReceipt, setShowReceipt] = useState(false);
-    const [availableProducts, setAvailableProducts] = useState([]); // Track available quantities
+    const [availableProducts, setAvailableProducts] = useState([]);
+    const [userPosition, setUserPosition] = useState(null); // Track user's position
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -24,7 +25,6 @@ const DashboardItemModal = ({ show, onHide, customerData }) => {
                 const data = await response.json();
                 setProducts(data);
 
-                // Initialize availableProducts with initial quantities
                 const initialAvailable = data.reduce((acc, product) => {
                     acc[product.id] = product.quantity;
                     return acc;
@@ -35,34 +35,57 @@ const DashboardItemModal = ({ show, onHide, customerData }) => {
             }
         };
 
+        const fetchUserPosition = async () => {
+            if (customerData?.rfid) {
+                try {
+                    const response = await fetch(`${URL}/api/Dashboard/getname`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ rfid: customerData.rfid }),
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        setUserPosition(data.position);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user position:", error);
+                }
+            }
+        };
+
         if (show) {
             fetchProducts();
-            setCart([]); // Clear cart
+            fetchUserPosition();
+            setCart([]);
         }
-    }, [show]);
-
+    }, [show, customerData]);
 
     useEffect(() => {
-      const selected = products.find(p => p.product_name === selectedProduct);
-      if (selected) {
-          // Use availableProducts to determine maxQuantity
-          const availableQuantity = availableProducts[selected.id] || 0;
-          setMaxQuantity(availableQuantity);
-          setTotalPrice(selected.selling_price * Math.min(quantity, availableQuantity)); // Limit quantity to available
-      } else {
-          setTotalPrice(0);
-          setMaxQuantity(0);
-      }
-  }, [selectedProduct, quantity, products, availableProducts]);
+        const selected = products.find(p => p.product_name === selectedProduct);
+        if (selected) {
+            const availableQuantity = availableProducts[selected.id] || 0;
+            setMaxQuantity(availableQuantity);
+            
+            // Check if user has a special position that gets free items
+            const isFreeUser = userPosition && ['Student', 'Gatepass', 'Intern'].includes(userPosition);
+            const calculatedPrice = isFreeUser ? 0 : selected.selling_price * Math.min(quantity, availableQuantity);
+            
+            setTotalPrice(calculatedPrice);
+        } else {
+            setTotalPrice(0);
+            setMaxQuantity(0);
+        }
+    }, [selectedProduct, quantity, products, availableProducts, userPosition]);
 
     const handleProductChange = (e) => {
         setSelectedProduct(e.target.value);
-        setQuantity(1); // Reset quantity
+        setQuantity(1);
     };
 
     const handleQuantityChange = (e) => {
         const newQuantity = parseInt(e.target.value, 10);
-        setQuantity(Math.max(1, Math.min(newQuantity, maxQuantity))); // Keep within [1, maxQuantity]
+        setQuantity(Math.max(1, Math.min(newQuantity, maxQuantity)));
     };
 
     const handleAddToCart = () => {
@@ -73,65 +96,62 @@ const DashboardItemModal = ({ show, onHide, customerData }) => {
         }
 
         const availableQuantity = availableProducts[selected.id] || 0;
-        if (availableQuantity === 0) return;  // Don't add if no stock
-
+        if (availableQuantity === 0) return;
 
         const quantityToAdd = Math.min(quantity, availableQuantity);
         const existingCartItemIndex = cart.findIndex(item => item.id === selected.id);
 
+        // Check if user has a special position that gets free items
+        const isFreeUser = userPosition && ['Student', 'Gatepass', 'Intern'].includes(userPosition);
+        const itemPrice = isFreeUser ? 0 : selected.selling_price;
+
         if (existingCartItemIndex > -1) {
-            // Update existing cart item
             const updatedCart = [...cart];
             const currentCartQuantity = updatedCart[existingCartItemIndex].quantity;
             const newTotalQuantity = currentCartQuantity + quantityToAdd;
 
-              // Check if adding exceeds available quantity.
-              if (newTotalQuantity > selected.quantity){
+            if (newTotalQuantity > selected.quantity) {
                 return;
-              }
+            }
 
             updatedCart[existingCartItemIndex] = {
                 ...updatedCart[existingCartItemIndex],
                 quantity: newTotalQuantity,
-                totalPrice: newTotalQuantity * selected.selling_price,
+                price: itemPrice, // Update price in case it changed
+                totalPrice: newTotalQuantity * itemPrice,
             };
             setCart(updatedCart);
         } else {
-            // Add new item to cart
             setCart([...cart, {
                 id: selected.id,
                 product_name: selected.product_name,
                 quantity: quantityToAdd,
-                price: selected.selling_price,
-                totalPrice: quantityToAdd * selected.selling_price
+                price: itemPrice,
+                totalPrice: quantityToAdd * itemPrice
             }]);
         }
 
-
-        // Update availableProducts
         setAvailableProducts(prevAvailable => ({
             ...prevAvailable,
             [selected.id]: availableQuantity - quantityToAdd
         }));
 
-        // Reset
         setSelectedProduct('');
         setQuantity(1);
     };
+
     const handleRemoveFromCart = (productId) => {
-      const removedItem = cart.find(item => item.id === productId);
-      const updatedCart = cart.filter(item => item.id !== productId);
-      setCart(updatedCart);
+        const removedItem = cart.find(item => item.id === productId);
+        const updatedCart = cart.filter(item => item.id !== productId);
+        setCart(updatedCart);
 
-      // Restore quantity to availableProducts
-      if (removedItem) {
-          setAvailableProducts(prevAvailable => ({
-              ...prevAvailable,
-              [productId]: (prevAvailable[productId] || 0) + removedItem.quantity
-          }));
-      }
-  };
-
+        if (removedItem) {
+            setAvailableProducts(prevAvailable => ({
+                ...prevAvailable,
+                [productId]: (prevAvailable[productId] || 0) + removedItem.quantity
+            }));
+        }
+    };
 
     const handleNext = () => {
         setShowReceipt(true);
@@ -154,6 +174,9 @@ const DashboardItemModal = ({ show, onHide, customerData }) => {
                         <div className="mb-3">
                             <h5>Buyer: {customerData.firstName} {customerData.lastName}</h5>
                             {customerData.rfid && <p><strong>RFID:</strong> {customerData.rfid}</p>}
+                            {userPosition && ['Student', 'Gatepass', 'Intern'].includes(userPosition) && (
+                                <p className="text-success"><strong>Employee Pricing: FREE</strong></p>
+                            )}
                         </div>
                     )}
                     <Form.Group>
@@ -166,7 +189,7 @@ const DashboardItemModal = ({ show, onHide, customerData }) => {
                                     <option
                                         key={product.id}
                                         value={product.product_name}
-                                        disabled={availableQuantity === 0} // Disable if no stock
+                                        disabled={availableQuantity === 0}
                                     >
                                         {product.product_name} ({availableQuantity} available)
                                     </option>
@@ -258,6 +281,7 @@ const DashboardItemModal = ({ show, onHide, customerData }) => {
                 onHide={handleReceiptClose}
                 customerData={customerData}
                 cart={cart}
+                userPosition={userPosition}
             />
         </>
     );
